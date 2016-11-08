@@ -27,7 +27,6 @@ class Shooting_Star:
     def update(self):
         self.x += self.speed
         self.y -= self.speed
-        #delay(0.05)
         if (self.x >= 800 or self.y <= 0):
             self.isstate = 0
             #del(self)
@@ -96,7 +95,7 @@ class BackGround:
                 if self.star[i][j] == 1:
                     self.Backimage.clip_draw((32 * (5 + self.star_frame[i][j])), 32, 32, 32, i * 40 + self.speed, j * 40 + self.speed, 80, 80)  #star
 
-class Grass:
+class Grass:        #Tiles
     def __init__(self):
         self.image = load_image('platformertiles.png')
         self.frame = 0
@@ -246,7 +245,6 @@ def update():
         stars[i].update()
         if stars[i].isstate == 0:
             stars[i] = Shooting_Star()
-    #for star in stars:
     boy.update()
     grass.update()
     moon.update()
