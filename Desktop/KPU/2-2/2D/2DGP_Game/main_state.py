@@ -114,7 +114,7 @@ class Boy:
     RIGHT_STAND = 3
     LEFT_STAND = 4
     JUMP = 5
-
+                                #Boy's Speed
     def __init__(self):
         self.RIGHT_RUN_image = load_image('CH_RIGHT_RUN.png')
         self.LEFT_RUN_image = load_image('CH_LEFT_RUN.png')
