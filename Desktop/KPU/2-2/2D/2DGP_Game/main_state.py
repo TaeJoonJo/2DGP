@@ -59,8 +59,6 @@ class Star:
         if self.time >= 5.0:
             self.state = random.randint(0, 20)
             self.time = 0
-        if boy.ismove == True:
-            self.x += self.speed
         self.time += 0.1
     def draw(self, i, j):
         self.image.clip_draw((32 * (5 + self.frame)), 32, 32, 32, i * 40, j * 40, 80, 80)
