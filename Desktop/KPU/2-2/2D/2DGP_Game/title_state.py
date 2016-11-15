@@ -32,7 +32,7 @@ def handle_events(frame_time):
 def draw(frame_time):
     clear_canvas()
     image.clip_draw(0, 0, 1500, 850, 0, 0, 1600, 1200)
-    font.draw(200, 100, 'Press Space To Play', (255,255,255))
+    font.draw(200, 100, 'Press Space Bar To Play', (255,255,255))
     update_canvas()
 
 def update(frame_time):
