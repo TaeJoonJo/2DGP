@@ -6,18 +6,17 @@ import main_state
 
 name = "TitleState"
 image = None
-
+font = None
 
 def enter():
-    global image
+    global image, font
     image = load_image('Main.png')
-    pass
+    font = load_font('ENCR10B.TTF', 20)
 
 def exit():
     global image
     del(image)
     #close_canvas()
-    pass
 
 def handle_events(frame_time):
     events = get_events()
@@ -30,19 +29,11 @@ def handle_events(frame_time):
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
                 game_framework.change_state(main_state)
 
-    pass
-
 def draw(frame_time):
     clear_canvas()
     image.clip_draw(0, 0, 1500, 850, 0, 0, 1600, 1200)
+    font.draw(200, 100, 'Press Space To Play', (255,255,255))
     update_canvas()
-    pass
-
-
-
-
-
-
 
 def update(frame_time):
     pass
