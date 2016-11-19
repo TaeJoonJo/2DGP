@@ -47,7 +47,7 @@ def create_world():
 def destroy_world():
     global hero
     global background
-    global moon
+    global moon   #
     global stars
     global tiles
     del (background)
