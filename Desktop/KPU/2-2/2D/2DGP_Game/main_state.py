@@ -135,7 +135,6 @@ def update(frame_time):
     #hero.update(frame_time)
     moon.update(hero.ismove, frame_time)
 
-
     #delay(0.05)
 
     frame_rate = 1.0 / frame_time
@@ -151,7 +150,7 @@ def draw(framge_time):
         if isRect == True:
             star.draw_bb()
     moon.draw()
-    for tile in tiles:
+    for tile in tiles:  #
         tile.draw()
         if isRect == True:
             tile.draw_bb()
