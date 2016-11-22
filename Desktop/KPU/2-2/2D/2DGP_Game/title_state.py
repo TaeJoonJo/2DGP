@@ -7,14 +7,23 @@ import main_state
 name = "TitleState"
 image = None
 font = None
+title_bgm = None
 
 def enter():
     global image, font
+    global title_bgm
+    title_bgm = load_music('Title.mp3')
+    title_bgm.set_volume(90)
+    title_bgm.repeat_play()
     image = load_image('Main.png')
     font = load_font('ENCR10B.TTF', 20)
 
 def exit():
     global image
+    global font
+    global title_bgm
+    del(font)
+    global title_bgm
     del(image)
     #close_canvas()
 

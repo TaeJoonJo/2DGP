@@ -10,7 +10,6 @@ from Tile import Tile
 from BackGround import BackGround, Moon
 from Shooting_Star import Shooting_Star
 
-
 from pico2d import *
 
 import game_framework
@@ -29,6 +28,8 @@ font = None
 stars = None
 tiles = None
 
+bgm = None
+
 isRect = True
 
 def create_world():
@@ -37,6 +38,10 @@ def create_world():
     global moon
     global stars
     global tiles
+    global bgm
+    bgm = load_music('For_River.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
     background = BackGround()
     hero = Hero()
     #hero.Hp = (Hero_Hp(i) for i in range(3))
@@ -50,6 +55,8 @@ def destroy_world():
     global moon   #
     global stars
     global tiles
+    global bgm
+    del (bgm)
     del (background)
     del (hero)
     del (moon)
