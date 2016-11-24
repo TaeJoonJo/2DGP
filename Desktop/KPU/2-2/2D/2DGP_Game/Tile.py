@@ -4,11 +4,11 @@ from pico2d import *
 
 class Tile:
     image = None
-    def __init__(self, num):
+    def __init__(self, xnum, ynum):
         self.frame = 0
         self.sizex, self.sizey = 50, 50
-        self.x = num * 50
-        self.y = 0
+        self.x = xnum * 50
+        self.y = ynum * 50
         if Tile.image == None:
             Tile.image = load_image('platformertiles.png')
 

@@ -2,23 +2,26 @@ import random
 
 from pico2d import *
 
-class Moon:
-    PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
-    RUN_SPEED_KMPH = 30.0  # Km / Hour
-    RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
-    RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
-    RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+LEFT_MOVE = -1
+RIGHT_MOVE = 1
 
+class Moon:
     image = None
+
     def __init__(self):
         self.x = 670
         self.y = 500
         self.speed = 5
         if Moon.image == None:
             Moon.image = load_image('platformertiles.png')
-    def update(self, ismove, frame_time):
-        if ismove == 1:
-            self.x += self.speed * frame_time
+    def update(self, Hero_Dir, frame_time):
+        #if ismove == 1:
+        #    self.x += self.speed * frame_time
+        if self.x <= 670:
+            if Hero_Dir is LEFT_MOVE or RIGHT_MOVE:
+                self.x += self.speed * frame_time * -Hero_Dir
+        else:
+            self.x = 670
     def draw(self):
         self.image.clip_draw(32 * 3, 32 * 2, 32, 32, self.x, self.y, 80, 80)
 
@@ -31,6 +34,7 @@ class BackGround:
         self.star_frame = [[0]*15 for i in range(20)]
         if BackGround.Backimage == None:
             BackGround.Backimage = load_image('platformertiles.png')
+
     def update(self, frame_time):
         if self.star_time >= 5:
             for i in range(20):

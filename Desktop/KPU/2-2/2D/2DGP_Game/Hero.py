@@ -1,5 +1,9 @@
 import random
 
+LEFT_MOVE = -1
+RIGHT_MOVE = 1
+STOP_MOVE = 0
+
 from pico2d import *
 
 class Hero:
@@ -28,7 +32,7 @@ class Hero:
     def __init__(self):
         self.x, self.y = 0, 100
         self.sizex, self.sizey = 25, 50
-        self.dir = 0
+        self.dir = STOP_MOVE
         self.frame = 0
         self.total_frames = 0.0
         self.state = self.RIGHT_STAND
@@ -36,7 +40,10 @@ class Hero:
         self.isjump = False
         self.isreach = False
         self.isNext = False
-        #self.Hp = None
+        self.jump_speed = 200
+
+        self.isSuper = False
+        self.SuperTime = 0.0
 
         self.Hp = [Hero_Hp(i) for i in range(5)]
         self.Hpnum = 5
@@ -55,14 +62,14 @@ class Hero:
             return max(minimum, min(x, maximum))
 
         if(self.x > 500):
-            self.dir = 0
+            self.dir = STOP_MOVE
             self.x = 500
             self.isNext = True
         elif(self.x < 0):
-            self.dir = 0
+            self.dir = STOP_MOVE
             self.x = 0
         else:
-            self.dir = 1
+            self.dir = RIGHT_MOVE
             self.isNext = False
 
         self.handle_state[self.state](self)
@@ -73,37 +80,49 @@ class Hero:
         self.x += (self.dir * distance)
 
         if (self.y <= 180 and self.isjump == True and self.isreach == False):   # reach highest
-            self.y += 200 * frame_time
+            self.y += self.jump_speed * frame_time
         if self.y >= 180:
             self.isreach = True
         if self.isreach == True:
-            self.y -= 200 * frame_time
+            self.y -= self.jump_speed * frame_time
         if self.y <= G_y + G_sizey + self.sizey:
             self.isreach = False
             self.isjump = False
 
+        if self.isSuper is True and self.SuperTime <= 5.0:
+            self.SuperTime += 1.5 * frame_time
+        elif self.SuperTime > 5.0:
+            self.SuperTime = 0.0
+            self.isSuper = False
+
     def draw(self):
-        self.image.clip_draw(self.frame * 34, 0, 33, 39, self.x, self.y, 80, 100)
+        if self.isSuper is True:
+            Rand_image = random.randint(1,3)
+            if( Rand_image is 1 or Rand_image is 2):
+                self.image.clip_draw(self.frame * 34, 0, 33, 39, self.x, self.y, 80, 100)
+        else:
+            self.image.clip_draw(self.frame * 34, 0, 33, 39, self.x, self.y, 80, 100)
+
         for hp in self.Hp:
             hp.draw()
 
     def handle_right_run(self):
         self.image = self.RIGHT_RUN_image
-        self.dir = 1
+        self.dir = RIGHT_MOVE
 
     def handle_left_run(self):
         self.image = self.LEFT_RUN_image
-        self.dir = -1
+        self.dir = LEFT_MOVE
 
     def handle_right_stand(self):
         self.image = self.RIGHT_STAND_image
-        self.ismove = False
-        self.dir = 0
+        #self.ismove = False
+        self.dir = STOP_MOVE
 
     def handle_left_stand(self):
         self.image = self.LEFT_STAND_image
-        self.ismove = False
-        self.dir = 0
+        #self.ismove = False
+        self.dir = STOP_MOVE
 
     def handle_jump(self):
         pass
@@ -147,7 +166,8 @@ class Hero_Hp:
     def __init__(self, Hpnum):
         self.x, self.y = Hpnum * 40 + 30, 550
         #if Hero_Hp == None:
-        Hero_Hp.image = load_image('heart_full_32x32.png')
+        if Hero_Hp.image == None:
+            Hero_Hp.image = load_image('heart_full_32x32.png')
 
     def draw(self):
         self.image.draw(self.x, self.y)

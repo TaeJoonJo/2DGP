@@ -5,12 +5,15 @@ from pico2d import *
 class Shooting_Star:
     image = None
 
+    APPEAR = 1
+    DISAPPEAR = 0
+
     def __init__(self):
         self.x = random.randint(-200, 700)
         self.y = 600
         self.sizex = 15
         self.sizey = 15
-        self.isstate = 1
+        self.isstate = Shooting_Star.APPEAR
         self.speed = random.randint(200,300)
         self.size = 1
         if(Shooting_Star.image == None):
@@ -23,7 +26,7 @@ class Shooting_Star:
         if(isNext == True):
             self.x -= distance * 0.5
         if (self.x >= 800 or self.y <= 0):
-            self.isstate = 0
+            self.isstate = Shooting_Star.DISAPPEAR
 
     def draw(self):
         self.image.clip_draw(0, 0, 34, 34, self.x, self.y, 30 * self.size, 30 * self.size)

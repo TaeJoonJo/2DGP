@@ -44,9 +44,10 @@ def create_world():
     bgm.repeat_play()
     background = BackGround()
     hero = Hero()
-    #hero.Hp = (Hero_Hp(i) for i in range(3))
     moon = Moon()
-    tiles = [Tile(i) for i in range(17)]
+    tiles = [Tile(i, 0) for i in range(17)]
+    new_tile = Tile(17, 1)
+    tiles.append(new_tile)
     stars = [Shooting_Star() for i in range(STARNUM)]
 
 def destroy_world():
@@ -87,11 +88,9 @@ def handle_events(frame_time):
             if event.key == SDLK_ESCAPE:
                 game_framework.change_state(title_state)
             elif event.key == SDLK_LEFT:
-                if (moon.x <= 670):
-                    moon.speed = 3
+                pass
             elif event.key == SDLK_RIGHT:
-                if (moon.x >= 130):
-                    moon.speed = -3
+                pass
             elif event.key == SDLK_1:
                 if(isRect == False):
                     isRect = True
@@ -99,26 +98,36 @@ def handle_events(frame_time):
                     isRect = False
         #else:
 
+def Game_End_Check():
+    global moon
+    global hero
+
+    if (hero.Hpnum) == 0:
+        game_framework.push_state(over_state)
+    elif moon.x <= 100:
+        game_framework.push_state(over_state)
+
 current_time = get_time()
 
 def update(frame_time):
     global tile_num
     global stars
     global tiles
+    global moon
     Snum = 0
     background.update(frame_time)
 
-    if hero.Hpnum == 0:
-        game_framework.push_state(over_state)
-
+    Game_End_Check()
 
     for star in stars:
         star.update(frame_time, hero.isNext)
-        if MyCrush(star, hero):
-            star.isstate = 0
+        if MyCrush(star, hero) and hero.isSuper is False:
+            star.isstate = Shooting_Star.DISAPPEAR
             hero.Hp.pop()
             hero.Hpnum -= 1
-        if star.isstate == 0:
+            hero.isSuper = True
+
+        if star.isstate == Shooting_Star.DISAPPEAR:
             stars.remove(star)
             new_star = Shooting_Star()
             stars.append(new_star)
@@ -130,17 +139,16 @@ def update(frame_time):
             Snum += 1
         if MyCrush(hero, tile):
             hero.y = tile.y + tile.sizey + hero.sizey
-            #hero.isreach = False
-            #hero.isjump = False
         if(tile.x < 0 and tile_num == 17):
             tiles.remove(tile)
             tile_num -= 1
         if(tile_num < 17):
-            new_tile = Tile(17)
+            new_tile = Tile(17, 0)
             tiles.append(new_tile)
             tile_num += 1
     #hero.update(frame_time)
-    moon.update(hero.ismove, frame_time)
+
+    moon.update(hero.dir, frame_time)
 
     #delay(0.05)
 
@@ -157,20 +165,13 @@ def draw(framge_time):
         if isRect == True:
             star.draw_bb()
     moon.draw()
-    for tile in tiles:  #
+    for tile in tiles:
         tile.draw()
         if isRect == True:
             tile.draw_bb()
     hero.draw()
     if isRect == True:
         hero.draw_bb()
-    #for Hp in hero.Hp:
-    #    Hp.draw()
-    #hp.drawa()
+
     update_canvas()
-
-
-
-
-
 
