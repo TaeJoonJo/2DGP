@@ -11,8 +11,8 @@ def MyCrush(a, b):
 
     return True
 
-def MyCrysh_To_Tile(a,b):
-    left_a, bottom_a, right_a, top_a = a.get_bb()
+def MyCrysh_To_Tile(a,b):                           # 타일과의 충돌체크는 나눈다.
+    left_a, bottom_a, right_a, top_a = a.get_bb()      # 하단부만 충돌하도록
     left_b, bottom_b, right_b, top_b = b.get_bb()
 
     if left_a > right_b: return False
