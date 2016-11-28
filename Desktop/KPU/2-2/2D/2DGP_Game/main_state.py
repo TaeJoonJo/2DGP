@@ -105,7 +105,7 @@ def Game_End_Check():
     if (hero.Hpnum) == 0:
         game_framework.push_state(over_state)
     elif moon.x <= 100:
-        game_framework.push_state(over_state)
+        game_framework.push_state(over_state)   #
 
 current_time = get_time()   #
 
