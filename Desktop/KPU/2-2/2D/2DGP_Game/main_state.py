@@ -107,7 +107,9 @@ def Game_End_Check():
     elif moon.x <= 100:
         game_framework.push_state(over_state)   #
 
+
 current_time = get_time()   #
+
 
 def update(frame_time):
     global tile_num
