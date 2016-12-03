@@ -20,6 +20,8 @@ name = "MainState"
 tile_num = 17
 STARNUM = 7
 
+bgm = None
+
 hero = None
 grass = None
 background = None
@@ -27,8 +29,6 @@ moon = None
 font = None
 stars = None
 tiles = None
-
-bgm = None
 
 isRect = True
 
