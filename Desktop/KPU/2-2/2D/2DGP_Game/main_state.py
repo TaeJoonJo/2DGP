@@ -22,6 +22,8 @@ STARNUM = 7
 
 bgm = None
 
+isRect = True
+
 hero = None
 grass = None
 background = None
@@ -29,8 +31,6 @@ moon = None
 font = None
 stars = None
 tiles = None
-
-isRect = True
 
 def create_world():
     global hero
