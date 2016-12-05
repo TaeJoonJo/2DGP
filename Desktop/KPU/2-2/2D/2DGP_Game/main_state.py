@@ -3,14 +3,13 @@ import json
 import os
 import over_state
 
+from pico2d import *
 from Functions import *
 
 from Hero import Hero, Hero_Hp
 from Tile import Tile
 from BackGround import BackGround, Moon
 from Shooting_Star import Shooting_Star
-
-from pico2d import *
 
 import game_framework
 import title_state  #
