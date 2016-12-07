@@ -21,7 +21,7 @@ STARNUM = 7
 
 bgm = None
 
-isRect = True
+isRect = False
 
 hero = None
 grass = None
