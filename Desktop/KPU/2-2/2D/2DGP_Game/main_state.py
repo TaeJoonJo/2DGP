@@ -12,7 +12,7 @@ from BackGround import BackGround, Moon
 from Shooting_Star import Shooting_Star
 
 import game_framework
-import title_state  #
+import title_state
 
 name = "MainState"
 
@@ -20,7 +20,6 @@ tile_num = 17
 STARNUM = 7
 
 bgm = None
-
 isRect = False
 
 hero = None
