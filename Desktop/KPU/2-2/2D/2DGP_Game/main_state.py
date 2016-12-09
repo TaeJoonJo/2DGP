@@ -156,7 +156,7 @@ def update(frame_time):
     print("Frame Rate : %f fps, Frame Time : %f sec," % (frame_rate, frame_time))
 
 def draw(framge_time):
-    global stars
+    #global stars
     #hp = Hero_Hp(2)
     clear_canvas()
     background.draw()
