@@ -70,10 +70,10 @@ def exit():
     destroy_world()
 
 def pause():
+
     pass
 
 def resume():
-
     pass
 
 def handle_events(frame_time):

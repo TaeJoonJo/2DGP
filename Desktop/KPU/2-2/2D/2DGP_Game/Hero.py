@@ -121,8 +121,8 @@ class Hero:
 
     def handle_left_stand(self):
         self.image = self.LEFT_STAND_image
-        #self.ismove = False
         self.dir = STOP_MOVE
+        # self.ismove = False
 
     def handle_jump(self):
         pass
