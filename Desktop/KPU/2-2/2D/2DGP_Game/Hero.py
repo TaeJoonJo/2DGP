@@ -1,8 +1,8 @@
 import random
 
 LEFT_MOVE = -1
-RIGHT_MOVE = 1
 STOP_MOVE = 0
+RIGHT_MOVE = 1
 
 from pico2d import *
 
