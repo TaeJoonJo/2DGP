@@ -23,11 +23,11 @@ class Hero:
     RIGHT_STAND_image = None
     LEFT_STAND_image = None
 
-    RIGHT_RUN = 1               #Boy's Move
+    RIGHT_RUN = 1
     LEFT_RUN = 2
     RIGHT_STAND = 3
     LEFT_STAND = 4
-    JUMP = 5
+    JUMP = 5                      #Boy's Move
 
     def __init__(self):
         self.x, self.y = 0, 100
