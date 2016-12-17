@@ -79,7 +79,7 @@ class Hero:
         distance = Hero.RUN_SPEED_PPS * frame_time
         self.x += (self.dir * distance)
 
-        if (self.y <= 180 and self.isjump == True and self.isreach == False):   # reach highest
+        if (self.y <= 180 and self.isjump == True and self.isreach == False):
             self.y += self.jump_speed * frame_time
         if self.y >= 180:
             self.isreach = True
@@ -155,7 +155,7 @@ class Hero:
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LEFT:
-                self.state = self.LEFT_STAND
+                self.state = self.LEFT_STAND        #
 
             elif event.key == SDLK_RIGHT:
                 self.state = self.RIGHT_STAND
