@@ -158,7 +158,7 @@ class Hero:
                 self.state = self.LEFT_STAND        #
 
             elif event.key == SDLK_RIGHT:
-                self.state = self.RIGHT_STAND
+                self.state = self.RIGHT_STAND       #
 
 class Hero_Hp:
     image = None
