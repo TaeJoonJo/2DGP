@@ -1,4 +1,6 @@
 import random
+import Tile
+from Functions import *
 
 LEFT_MOVE = -1
 STOP_MOVE = 0
@@ -17,17 +19,19 @@ class Hero:
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 3
 
+    JUMPHIGH = 100                  # 점프 높이
+
     image = None
     RIGHT_RUN_image = None
     LEFT_RUN_image = None
     RIGHT_STAND_image = None
     LEFT_STAND_image = None
 
-    RIGHT_RUN = 1
+    RIGHT_RUN = 1                   # Boy's Move
     LEFT_RUN = 2
     RIGHT_STAND = 3
     LEFT_STAND = 4
-    JUMP = 5                      #Boy's Move
+    JUMP = 5
 
     def __init__(self):
         self.x, self.y = 0, 100
@@ -37,11 +41,15 @@ class Hero:
         self.total_frames = 0.0
         self.state = self.RIGHT_STAND
         self.ismove = False
+        self.isNext = False
+
+        # 점프시 사용
+        self.tempy = 0
         self.isjump = False
         self.isreach = False
-        self.isNext = False
         self.jump_speed = 200
 
+        # 피격시
         self.isSuper = False
         self.SuperTime = 0.0
 
@@ -57,7 +65,8 @@ class Hero:
         if Hero.LEFT_STAND_image == None:
             Hero.LEFT_STAND_image = load_image('CH_LEFT_STAND.png')
 
-    def update(self, frame_time, G_y, G_sizey):
+    #def update(self, frame_time, G_y, G_sizey):
+    def update(self, frame_time, tile):
         def clamp(minimum, x, maximum):
             return max(minimum, min(x, maximum))
 
@@ -79,13 +88,13 @@ class Hero:
         distance = Hero.RUN_SPEED_PPS * frame_time
         self.x += (self.dir * distance)
 
-        if (self.y <= 180 and self.isjump == True and self.isreach == False):
+        if (self.y <= self.tempy + Hero.JUMPHIGH and self.isjump == True and self.isreach == False):
             self.y += self.jump_speed * frame_time
-        if self.y >= 180:
+        if self.y >= self.tempy + Hero.JUMPHIGH:
             self.isreach = True
         if self.isreach == True:
             self.y -= self.jump_speed * frame_time
-        if self.y <= G_y + G_sizey + self.sizey:
+        if self.y < tile.y + tile.sizey + self.sizey:
             self.isreach = False
             self.isjump = False
 
@@ -141,24 +150,33 @@ class Hero:
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
 
-    def handle_event(self, event):
+    def handle_event(self, event, tiles):
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_LEFT:
                 self.state = self.LEFT_RUN
                 self.ismove = True
+                for tile in tiles:
+                    if MyCrysh_To_Tile(self, tile):
+                        self.x = tile.x + tile.sizex + self.sizex
+                        self.dir = STOP_MOVE
             elif event.key == SDLK_RIGHT:
                 self.state = self.RIGHT_RUN
                 self.ismove = True
+                for tile in tiles:
+                    if MyCrysh_To_Tile(self, tile):
+                        self.x = tile.x - tile.sizex - self.sizex
+                        self.dir = STOP_MOVE
             elif event.key == SDLK_UP:
                 if self.isjump == False:
+                    self.tempy = self.y
                     self.isjump = True
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LEFT:
-                self.state = self.LEFT_STAND        #
+                self.state = self.LEFT_STAND
 
             elif event.key == SDLK_RIGHT:
-                self.state = self.RIGHT_STAND       #
+                self.state = self.RIGHT_STAND
 
 class Hero_Hp:
     image = None

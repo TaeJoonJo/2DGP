@@ -80,7 +80,7 @@ def handle_events(frame_time):
     global isRect
     events = get_events()
     for event in events:
-        hero.handle_event(event)
+        hero.handle_event(event, tiles)
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN:
@@ -120,25 +120,32 @@ def update(frame_time):
 
     Game_End_Check()
 
+    Gametemp = random.randint(0, 10)
+
     for star in stars:
         star.update(frame_time, hero.isNext)
-        if MyCrush(star, hero) and hero.isSuper is False:
+        if MyCrush(star, hero) and hero.isSuper is False:       # 별과 캐릭터 충돌
             star.isstate = Shooting_Star.DISAPPEAR
-            hero.Hp.pop()
-            hero.Hpnum -= 1
-            hero.isSuper = True
+            if star.type is Shooting_Star.STAR:
+                hero.Hp.pop()
+                hero.Hpnum -= 1
+                hero.isSuper = True
 
-        if star.isstate == Shooting_Star.DISAPPEAR:
+        if star.isstate == Shooting_Star.DISAPPEAR:             # 별 삭제후 추가
             stars.remove(star)
             new_star = Shooting_Star()
+            if Gametemp is 1:
+                new_star.type = Shooting_Star.HP
             stars.append(new_star)
 
-    for tile in tiles:
+    for tile in tiles:                                          # 바닥과의 충돌처리
         tile.update(frame_time, hero.isNext, Hero.RUN_SPEED_PPS)
         if Snum == 0:
-            hero.update(frame_time, tile.y, tile.sizey)
+            #hero.update(frame_time, tile.y, tile.sizey)
+            hero.update(frame_time, tile)
             Snum += 1
         if MyCrush(hero, tile):
+            #if hero.isjump is True:
             hero.y = tile.y + tile.sizey + hero.sizey
         if(tile.x < 0 and tile_num == 17):
             tiles.remove(tile)

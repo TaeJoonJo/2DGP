@@ -3,10 +3,15 @@ import random
 from pico2d import *
 
 class Shooting_Star:
-    image = None
+    starimage = None
+    hpimage = None
 
     APPEAR = 1
     DISAPPEAR = 0
+
+    #Type
+    STAR = 0
+    HP = 1
 
     def __init__(self):
         self.x = random.randint(-200, 700)
@@ -16,8 +21,11 @@ class Shooting_Star:
         self.isstate = Shooting_Star.APPEAR
         self.speed = random.randint(200,300)
         self.size = 1
-        if(Shooting_Star.image == None):
-            Shooting_Star.image = load_image('Star.png')
+        self.type = Shooting_Star.STAR
+        if(Shooting_Star.starimage == None):
+            Shooting_Star.starimage = load_image('Star.png')
+        if Shooting_Star.hpimage == None:
+            Shooting_Star.hpimage = load_image('heart_full_32x32.png')
 
     def update(self, frame_time, isNext):
         distance = self.speed * frame_time
@@ -28,8 +36,14 @@ class Shooting_Star:
         if (self.x >= 800 or self.y <= 0):
             self.isstate = Shooting_Star.DISAPPEAR
 
+        #if self.type is Shooting_Star.HP and self.isstate is Shooting_Star.DISAPPEAR:
+
+
     def draw(self):
-        self.image.clip_draw(0, 0, 34, 34, self.x, self.y, 30 * self.size, 30 * self.size)
+        if self.type == Shooting_Star.STAR:
+            self.starimage.clip_draw(0, 0, 34, 34, self.x, self.y, 30 * self.size, 30 * self.size)
+        elif self.type == Shooting_Star.HP:
+            self.hpimage.draw(self.x, self.y)
 
     def get_bb(self):
         return self.x - self.sizex, self.y - self.sizey, self.x + self.sizex, self.y + self.sizey
