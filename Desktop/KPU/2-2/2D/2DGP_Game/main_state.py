@@ -12,6 +12,7 @@ from Hero import Hero, Hero_Hp
 from Tile import Tile
 from BackGround import BackGround, Moon
 from Shooting_Star import Shooting_Star
+from Monster import Monster
 
 import game_framework
 import title_state
@@ -31,6 +32,7 @@ moon = None
 font = None
 stars = None
 tiles = None
+monsters = None
 
 Level = 0
 
@@ -38,6 +40,7 @@ NORMAL = 0
 HARD = 1
 
 STARNUM = 0
+MonsterNum = 0
 
 Gametemp2 = 0
 blanktile = 0
@@ -52,6 +55,7 @@ def create_world():
     global bgm
     global STARNUM
     global Level
+    global monsters
     bgm = load_music('For_River.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
@@ -67,6 +71,7 @@ def create_world():
     else:
         STARNUM = 12
     stars = [Shooting_Star() for i in range(STARNUM)]
+    monsters = [Monster() for i in range(1)]
 
 def destroy_world():
     global hero
@@ -75,12 +80,14 @@ def destroy_world():
     global stars
     global tiles
     global bgm
+    global monsters
     del (bgm)
     del (background)
     del (hero)
     del (moon)
     del (stars)
     del (tiles)
+    del (monsters)
 
 def enter():
     game_framework.reset_time()
@@ -137,6 +144,8 @@ def update(frame_time):
     global Gametemp2
     global blanktile
     global isBlank
+    global monsters
+    global MonsterNum
     Snum = 0
     background.update(frame_time)
 
@@ -166,6 +175,23 @@ def update(frame_time):
             if Gametemp is 1:
                 new_star.type = Shooting_Star.HP
             stars.append(new_star)
+
+    for monster in monsters:
+        monster.update(frame_time, hero.isNext)
+        if monster.x < 0 - monster.sizex:
+            monsters.remove(monster)
+            MonsterNum -= 1
+        if MyCrush(hero, monster):
+            if hero.isSuper is False:
+                monster.Sound.play()
+                hero.Hp.pop()
+                hero.Hpnum -= 1
+                hero.isSuper = True
+    Gametemp3 = random.randint(0, 1000)
+    if Gametemp3 == 512 and MonsterNum < 2:
+        new_monster = Monster()
+        monsters.append(new_monster)
+        MonsterNum += 1
 
     for tile in tiles:                                          # 바닥과의 충돌처리
         tile.update(frame_time, hero.isNext, Hero.RUN_SPEED_PPS)
@@ -209,9 +235,14 @@ def draw(framge_time):
         tile.draw()
         if isRect is True:
             tile.draw_bb()
+    for monster in monsters:
+        monster.draw()
+        if isRect is True:
+            monster.draw_bb()
     hero.draw()
     if isRect is True:
         hero.draw_bb()
+
 
     update_canvas()
 
