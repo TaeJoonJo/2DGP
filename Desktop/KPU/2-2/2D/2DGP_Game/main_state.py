@@ -2,6 +2,8 @@ import random
 import json
 import os
 import over_state
+import end_state
+import title_state
 
 from pico2d import *
 from Functions import *
@@ -17,7 +19,7 @@ import title_state
 name = "MainState"
 
 tile_num = 17
-STARNUM = 7
+
 
 bgm = None
 isRect = False
@@ -30,6 +32,17 @@ font = None
 stars = None
 tiles = None
 
+Level = 0
+
+NORMAL = 0
+HARD = 1
+
+STARNUM = 0
+
+Gametemp2 = 0
+blanktile = 0
+isBlank = True
+
 def create_world():
     global hero
     global background
@@ -37,15 +50,22 @@ def create_world():
     global stars
     global tiles
     global bgm
+    global STARNUM
+    global Level
     bgm = load_music('For_River.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
     background = BackGround()
-    hero = Hero()
     moon = Moon()
     tiles = [Tile(i, 0) for i in range(17)]
-    new_tile = Tile(17, 1)
-    tiles.append(new_tile)
+    # new_tile = Tile(15, 1)
+    # tiles.append(new_tile)
+    Level = title_state.Level
+    hero = Hero(Level)
+    if Level == NORMAL:
+        STARNUM = 7
+    else:
+        STARNUM = 12
     stars = [Shooting_Star() for i in range(STARNUM)]
 
 def destroy_world():
@@ -91,23 +111,22 @@ def handle_events(frame_time):
             elif event.key == SDLK_RIGHT:
                 pass
             elif event.key == SDLK_1:
-                if(isRect == False):
+                if isRect is False:
                     isRect = True
                 else:
                     isRect = False
-        #else:
+        # else:
 
 def Game_End_Check():
     global moon
     global hero
 
-    if (hero.Hpnum) == 0:
+    if hero.Hpnum == 0:
         game_framework.push_state(over_state)
     elif moon.x <= 100:
-        game_framework.push_state(over_state)   #
+        game_framework.push_state(end_state)
 
-
-current_time = get_time()   #
+current_time = get_time()
 
 
 def update(frame_time):
@@ -115,25 +134,35 @@ def update(frame_time):
     global stars
     global tiles
     global moon
+    global Gametemp2
+    global blanktile
+    global isBlank
     Snum = 0
     background.update(frame_time)
 
     Game_End_Check()
 
-    Gametemp = random.randint(0, 10)
-
     for star in stars:
         star.update(frame_time, hero.isNext)
-        if MyCrush(star, hero) and hero.isSuper is False:       # 별과 캐릭터 충돌
-            star.isstate = Shooting_Star.DISAPPEAR
-            if star.type is Shooting_Star.STAR:
-                hero.Hp.pop()
-                hero.Hpnum -= 1
-                hero.isSuper = True
+        if MyCrush(star, hero):                              # 별과 캐릭터 충돌
+            if hero.isSuper is False:
+                star.Star_Sound.play()
+                star.isstate = Shooting_Star.DISAPPEAR
+                if star.type is Shooting_Star.STAR:
+                    hero.Hp.pop()
+                    hero.Hpnum -= 1
+                    hero.isSuper = True
+            if star.type is Shooting_Star.HP and hero.Hpnum < hero.MaxHp:
+                star.Hp_Sound.play()
+                new_hp = Hero_Hp(hero.Hpnum)
+                hero.Hpnum += 1
+                star.isstate = Shooting_Star.DISAPPEAR
+                hero.Hp.append(new_hp)
 
         if star.isstate == Shooting_Star.DISAPPEAR:             # 별 삭제후 추가
             stars.remove(star)
             new_star = Shooting_Star()
+            Gametemp = random.randint(0, 10)
             if Gametemp is 1:
                 new_star.type = Shooting_Star.HP
             stars.append(new_star)
@@ -141,44 +170,47 @@ def update(frame_time):
     for tile in tiles:                                          # 바닥과의 충돌처리
         tile.update(frame_time, hero.isNext, Hero.RUN_SPEED_PPS)
         if Snum == 0:
-            #hero.update(frame_time, tile.y, tile.sizey)
+            # hero.update(frame_time, tile.y, tile.sizey)
             hero.update(frame_time, tile)
             Snum += 1
         if MyCrush(hero, tile):
-            #if hero.isjump is True:
+            #if MyCrysh_To_Tile(hero, tile) is False:
             hero.y = tile.y + tile.sizey + hero.sizey
-        if(tile.x < 0 and tile_num == 17):
+        #elif MyCrush(hero, tile) is False and hero.isjump is False:
+            #hero.y -= hero.jump_speed * frame_time         and tile_num >= 17
+        if tile.x < 0 :
+            #if tile_num >= 17:
             tiles.remove(tile)
             tile_num -= 1
-        if(tile_num < 17):
-            new_tile = Tile(17, 0)
-            tiles.append(new_tile)
-            tile_num += 1
-    #hero.update(frame_time)
+        if tile_num < 17:
+            if (Gametemp2 is not 3) or (blanktile >= 3):
+                Gametemp2 = random.randint(1, 30)
+                new_tile = Tile(17, 0)
+                tiles.append(new_tile)
+                blanktile = 0
+                tile_num += 1
+            elif (Gametemp2 is 3) and (blanktile < 3):
+                blanktile += 1
 
     moon.update(hero.dir, frame_time)
 
-    #delay(0.05)
-
     frame_rate = 1.0 / frame_time
-    print("Frame Rate : %f fps, Frame Time : %f sec," % (frame_rate, frame_time))
+    # print("Frame Rate : %f fps, Frame Time : %f sec," % (frame_rate, frame_time))
 
 def draw(framge_time):
-    #global stars
-    #hp = Hero_Hp(2)
     clear_canvas()
     background.draw()
     for star in stars:
         star.draw()
-        if isRect == True:
+        if isRect is True:
             star.draw_bb()
     moon.draw()
     for tile in tiles:
         tile.draw()
-        if isRect == True:
+        if isRect is True:
             tile.draw_bb()
     hero.draw()
-    if isRect == True:
+    if isRect is True:
         hero.draw_bb()
 
     update_canvas()

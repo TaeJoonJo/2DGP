@@ -32,8 +32,9 @@ class Hero:
     RIGHT_STAND = 3
     LEFT_STAND = 4
     JUMP = 5
+    Jump_Sound = None
 
-    def __init__(self):
+    def __init__(self, Level):
         self.x, self.y = 0, 100
         self.sizex, self.sizey = 25, 50
         self.dir = STOP_MOVE
@@ -53,8 +54,15 @@ class Hero:
         self.isSuper = False
         self.SuperTime = 0.0
 
-        self.Hp = [Hero_Hp(i) for i in range(5)]
-        self.Hpnum = 5
+        self.MaxHp = 0
+        if Level == 0:
+            self.MaxHp = 5
+        else:
+            self.MaxHp = 3
+
+        self.Hpnum = self.MaxHp
+
+        self.Hp = [Hero_Hp(i) for i in range(self.Hpnum)]
 
         if Hero.RIGHT_RUN_image == None:
             Hero.RIGHT_RUN_image = load_image('CH_RIGHT_RUN.png')
@@ -64,8 +72,9 @@ class Hero:
             Hero.RIGHT_STAND_image = load_image('CH_RIGHT_STAND.png')
         if Hero.LEFT_STAND_image == None:
             Hero.LEFT_STAND_image = load_image('CH_LEFT_STAND.png')
-
-    #def update(self, frame_time, G_y, G_sizey):
+        if Hero.Jump_Sound == None:
+            Hero.Jump_Sound = load_wav('hero_jumping.wav')
+            Hero.Jump_Sound.set_volume(10)
     def update(self, frame_time, tile):
         def clamp(minimum, x, maximum):
             return max(minimum, min(x, maximum))
@@ -88,11 +97,11 @@ class Hero:
         distance = Hero.RUN_SPEED_PPS * frame_time
         self.x += (self.dir * distance)
 
-        if (self.y <= self.tempy + Hero.JUMPHIGH and self.isjump == True and self.isreach == False):
+        if self.y <= self.tempy + Hero.JUMPHIGH and self.isjump is True and self.isreach is False:
             self.y += self.jump_speed * frame_time
         if self.y >= self.tempy + Hero.JUMPHIGH:
             self.isreach = True
-        if self.isreach == True:
+        if self.isreach is True:
             self.y -= self.jump_speed * frame_time
         if self.y < tile.y + tile.sizey + self.sizey:
             self.isreach = False
@@ -107,7 +116,7 @@ class Hero:
     def draw(self):
         if self.isSuper is True:
             Rand_image = random.randint(1,3)
-            if( Rand_image is 1 or Rand_image is 2):
+            if Rand_image is 1 or Rand_image is 2:
                 self.image.clip_draw(self.frame * 34, 0, 33, 39, self.x, self.y, 80, 100)
         else:
             self.image.clip_draw(self.frame * 34, 0, 33, 39, self.x, self.y, 80, 100)
@@ -125,13 +134,11 @@ class Hero:
 
     def handle_right_stand(self):
         self.image = self.RIGHT_STAND_image
-        #self.ismove = False
         self.dir = STOP_MOVE
 
     def handle_left_stand(self):
         self.image = self.LEFT_STAND_image
         self.dir = STOP_MOVE
-        # self.ismove = False
 
     def handle_jump(self):
         pass
@@ -167,9 +174,10 @@ class Hero:
                         self.x = tile.x - tile.sizex - self.sizex
                         self.dir = STOP_MOVE
             elif event.key == SDLK_UP:
-                if self.isjump == False:
+                if self.isjump is False:
                     self.tempy = self.y
                     self.isjump = True
+                    Hero.Jump_Sound.play(1)
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LEFT:
@@ -183,8 +191,7 @@ class Hero_Hp:
 
     def __init__(self, Hpnum):
         self.x, self.y = Hpnum * 40 + 30, 550
-        #if Hero_Hp == None:
-        if Hero_Hp.image == None:
+        if Hero_Hp.image is None:
             Hero_Hp.image = load_image('heart_full_32x32.png')
 
     def draw(self):

@@ -6,6 +6,9 @@ class Shooting_Star:
     starimage = None
     hpimage = None
 
+    Star_Sound = None
+    Hp_Sound = None
+
     APPEAR = 1
     DISAPPEAR = 0
 
@@ -26,6 +29,12 @@ class Shooting_Star:
             Shooting_Star.starimage = load_image('Star.png')
         if Shooting_Star.hpimage == None:
             Shooting_Star.hpimage = load_image('heart_full_32x32.png')
+        if(Shooting_Star.Star_Sound == None):
+            Shooting_Star.Star_Sound = load_wav('star_get.wav')
+            Shooting_Star.Star_Sound.set_volume(40)
+        if(Shooting_Star.Hp_Sound == None):
+            Shooting_Star.Hp_Sound = load_wav('item_get.wav')
+            Shooting_Star.Hp_Sound.set_volume(10)
 
     def update(self, frame_time, isNext):
         distance = self.speed * frame_time
