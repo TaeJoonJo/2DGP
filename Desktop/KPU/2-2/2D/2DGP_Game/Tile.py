@@ -11,6 +11,7 @@ class Tile:
         self.y = ynum * 50
         if Tile.image == None:
             Tile.image = load_image('platformertiles.png')
+        self.isgrass = random.randint(0,15)
 
     def update(self, frame_time, isNext, hero_speed):
         self.frame = (self.frame + 1) % 8
@@ -19,7 +20,10 @@ class Tile:
 
     def draw(self):
         self.image.clip_draw(32, 32*2, 32, 32, self.x, self.y, 100, 100)
-
+        if self.isgrass is 5:
+            self.image.clip_draw(32 * 5, 32 * 0, 32, 32, self.x, self.y + 100, 100, 100)
+        if self.isgrass is 6:
+            self.image.clip_draw(32 * 6, 32 * 0, 32, 32, self.x, self.y + 100, 100, 100)
     def get_bb(self):
         return self.x - self.sizex, self.y - self.sizey, self.x + self.sizex, self.y + self.sizey
 

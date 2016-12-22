@@ -10,7 +10,7 @@ image = None
 
 def enter():
     global image
-    image = load_image('End_Back.jpg')
+    image = load_image('GAME_END.png')
 
 def exit():
     global image
@@ -29,8 +29,7 @@ def handle_events(frame_time):
 
 def draw(frame_time):
     clear_canvas()
-    image.clip_draw(0, 0, 600, 320, 400, 300, 800, 600)
-    #image.draw(400, 300)
+    image.draw(400,300)
     update_canvas()
 
 def update(frame_time):

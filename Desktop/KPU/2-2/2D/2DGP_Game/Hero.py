@@ -75,6 +75,7 @@ class Hero:
         if Hero.Jump_Sound == None:
             Hero.Jump_Sound = load_wav('hero_jumping.wav')
             Hero.Jump_Sound.set_volume(10)
+
     def update(self, frame_time, tile):
         def clamp(minimum, x, maximum):
             return max(minimum, min(x, maximum))
